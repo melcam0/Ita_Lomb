@@ -79,7 +79,7 @@ ggplot(data=S,aes(x=giorno,y=Dim.1,colour=mese,label=giorno))+
   #geom_text()+
   geom_path(mapping=aes(x=S_L$giorno,y=S_L$Dim.1,label=S_L$giorno),colour="green4",size = 0.5)+
   geom_point(mapping=aes(x=S_L$giorno,y=S_L$Dim.1,colour=S_L$mese,label=S_L$giorno),size = 0.6)+ 
-  ylab('MM (7gg) PC 1')+ theme(legend.position="bottom")
+  ylab('MM (7gg) PC 1')
 
 ```
 
@@ -213,20 +213,12 @@ Y_L.score<-cbind.data.frame(Y[m:p,1:2],Y.pca$ind.sup$coord)
 round(Y.pca$eig[1:2,2],2)
 ```
 
-La percentuale della varianza totale letta dalle prime due componenti principali:
+
 
 ### {data-height=500}
 
 
-```{r echo=FALSE, fig.height=7.5, fig.width=15}
-g<-ggplot()+ 
-  geom_text(data=Y.var,aes(x=Dim.1,y=Dim.2,label=rownames(Y.var)))+ 
-  geom_point(cbind.data.frame(x=0,y=0),mapping = aes(x=x,y=y),shape=3,colour="red")+
-  xlim(-1,1)+ 
-  ylim(-1,1)+
-  xlab('PC 1')+ 
-  ylab('PC 2')
-
+```{r echo=FALSE}
 x=Y.pca$var$cos2[order(Y.pca$var$cos2[,1],decreasing = TRUE),]
 x<-as.data.frame(x)
 p<-ggplot(data=x, aes(x=rownames(x), y=Dim.1)) +
@@ -235,12 +227,33 @@ p<-ggplot(data=x, aes(x=rownames(x), y=Dim.1)) +
   ylab("")+xlab('')+
   ggtitle("% var letta da PC 1")
 
-library(gridExtra)
-grid.arrange(g, p, nrow = 1)
+print(p)
+
 ```
+
+***
+La percentuale della varianza totale letta 
+
+### {data-height=500}
+```{r echo=FALSE}
+g<-ggplot()+ 
+  geom_text(data=Y.var,aes(x=Dim.1,y=Dim.2,label=rownames(Y.var)))+ 
+  geom_point(cbind.data.frame(x=0,y=0),mapping = aes(x=x,y=y),shape=3,colour="red")+
+  xlim(-1,1)+ 
+  ylim(-1,1)+
+  xlab('PC 1')+ 
+  ylab('PC 2')
+
+print(g)
+```
+
+***
+Le variabili proiette sul piano PC1/PC2
 
 ### {data-height=150}
 La prima componente "legge" la gravità della situazione in generale.
 
-Andamento nel tempo della prima componente (o meglio dellla media mobile a 7 giorni - per "smorzare" le oscillazioni giornaliere ).\
-La linea blu è Italia e la verde Lombardia
+L'andamento nel tempo della prima componente (o meglio dellla media mobile a 7 giorni - per "smorzare" le oscillazioni giornaliere ) è in *Andamento giornaliero*.\
+La linea blu è Italia e la verde Lombardia.
+
+Gli stessi colori sono usati per i box con i valori giornalieri delle variabili.
