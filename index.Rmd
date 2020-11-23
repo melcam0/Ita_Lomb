@@ -79,7 +79,7 @@ ggplot(data=S,aes(x=giorno,y=Dim.1,colour=mese,label=giorno))+
   #geom_text()+
   geom_path(mapping=aes(x=S_L$giorno,y=S_L$Dim.1,label=S_L$giorno),colour="green4",size = 0.5)+
   geom_point(mapping=aes(x=S_L$giorno,y=S_L$Dim.1,colour=S_L$mese,label=S_L$giorno),size = 0.6)+ 
-  ylab('MM (7gg) PC 1')
+  ylab('MM (7gg) PC 1')+theme(legend.position="none")
 
 ```
 
@@ -254,6 +254,6 @@ Le variabili proiette sul piano PC1/PC2
 La prima componente "legge" la gravità della situazione in generale.
 
 L'andamento nel tempo della prima componente (o meglio dellla media mobile a 7 giorni - per "smorzare" le oscillazioni giornaliere ) è in *Andamento giornaliero*.\
-La linea blu è Italia e la verde Lombardia.
+La linea blu è Italia e la verde Lombardia. I pallini sono colorati per mese a partire da marzo 2020.
 
 Gli stessi colori sono usati per i box con i valori giornalieri delle variabili.
