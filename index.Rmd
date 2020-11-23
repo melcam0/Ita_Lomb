@@ -3,8 +3,7 @@ title: "Ita Lomb"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
-    vertical_layout: fill
+    vertical_layout: scroll
     source_code: embed
 ---
 
@@ -62,14 +61,15 @@ n<-nrow(Y)
 T<-Y[c(n/2,n),3:7]
 rownames(T)<-c('Ita','Lomb')
 ```
-Andamento giornaliero
+Andamento giornaliero {data-orientation=rows}
 =======================================================================
-Column {data-width=760}
------------------------------------------------------------------------
+   
+Row {data-height=700}
+-------------------------------------
 
 ###
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE,  message=FALSE, warning=FALSE}
 library(ggplot2)
 #colours <- c("Italia" = "blue","Lombardia" = "Green")
 ggplot(data=S,aes(x=giorno,y=Dim.1,colour=mese,label=giorno))+ 
@@ -79,12 +79,14 @@ ggplot(data=S,aes(x=giorno,y=Dim.1,colour=mese,label=giorno))+
   #geom_text()+
   geom_path(mapping=aes(x=S_L$giorno,y=S_L$Dim.1,label=S_L$giorno),colour="green4",size = 0.5)+
   geom_point(mapping=aes(x=S_L$giorno,y=S_L$Dim.1,colour=S_L$mese,label=S_L$giorno),size = 0.6)+ 
-  ylab('MM (7gg) PC 1')
+  ylab('MM (7gg) PC 1')+ theme(legend.position="bottom")
 
 ```
 
-Column {data-width=120}
------------------------------------------------------------------------
+
+   
+Row {data-height=150}
+-------------------------------------
 
 
 ### Ita_ricoverati 
@@ -126,8 +128,10 @@ valueBox(value = paste(format(T[1,5], big.mark = "."), "", sep = " "),
          color ="blue")
 ```
 
-Column {data-width=120}
------------------------------------------------------------------------
+
+   
+Row {data-height=150}
+-------------------------------------
 
 
 ### Lomb_ricoverati 
@@ -170,6 +174,7 @@ valueBox(value = paste(format(T[2,5], big.mark = "."), "", sep = " "),
 ```
 
 
+
 Dati Italia
 =======================================================================
 ```{r}
@@ -185,11 +190,11 @@ DT::datatable(data = Y[m:p,],rownames = FALSE)
 
 
 
-Info
+Info 
 =======================================================================
 
 
-###
+### {data-height=350}
 Consideriamo le 5 variabile dell'andamento giornaliero italiano: ricoverati con sintomi, terapia intensiva, isolamento domiciliare, guariti e morti. 
 
 Dati Protezione civile
@@ -210,7 +215,9 @@ round(Y.pca$eig[1:2,2],2)
 
 La percentuale della varianza totale letta dalle prime due componenti principali:
 
-###
+### {data-height=500}
+
+
 ```{r echo=FALSE, fig.height=7.5, fig.width=15}
 g<-ggplot()+ 
   geom_text(data=Y.var,aes(x=Dim.1,y=Dim.2,label=rownames(Y.var)))+ 
@@ -232,8 +239,7 @@ library(gridExtra)
 grid.arrange(g, p, nrow = 1)
 ```
 
-
-###
+### {data-height=150}
 La prima componente "legge" la gravità della situazione in generale.
 
 Andamento nel tempo della prima componente (o meglio dellla media mobile a 7 giorni - per "smorzare" le oscillazioni giornaliere ).\
