@@ -77,15 +77,16 @@ rownames(T)<-c('Ita','Lomb')
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(ggplot2)
+library(plotly)
 #colours <- c("Italia" = "blue","Lombardia" = "Green")
-ggplot(data=S,aes(x=giorno,y=Dim.1,colour=mese,label=giorno))+ 
+ggplotly(ggplot(data=S,aes(x=giorno,y=Dim.1,colour=mese,label=giorno))+ 
   geom_path(colour="blue",size = 0.5)+
   geom_point(size = 0.6)+ 
   #geom_line(mapping = aes(x=S_mm$giorno,y=S_mm$Dim.1),col='red')+
   #geom_text()+
   geom_path(mapping=aes(x=S_L$giorno,y=S_L$Dim.1,label=S_L$giorno),colour="green4",size = 0.5)+
   geom_point(mapping=aes(x=S_L$giorno,y=S_L$Dim.1,colour=S_L$mese,label=S_L$giorno),size = 0.6)+ 
-  ylab('MM (7gg) PC 1')+theme(legend.position="none")
+  ylab('MM (7gg) PC 1')+theme(legend.position="none"))
 
 ```
 
