@@ -5,6 +5,7 @@ output:
   flexdashboard::flex_dashboard:
     vertical_layout: scroll
     source_code: embed
+    social: [ "menu" ]
 ---
 
 ```{r setup, include=FALSE}
