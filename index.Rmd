@@ -3,9 +3,12 @@ title: "Ita Lomb"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output: 
   flexdashboard::flex_dashboard:
+    #theme: journal
     vertical_layout: scroll
     source_code: embed
-    social: [ "menu" ]
+    #social: [ "menu" ]
+    navbar:
+      - { icon: "fa-envelope-o", href: "mailto:camillomelzi@gmail.com", align: right }
 ---
 
 ```{r setup, include=FALSE}
