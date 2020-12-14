@@ -243,25 +243,6 @@ round(Y.pca$eig[1:2,2],2)
 ###  {data-height="500"}
 
 ```{r echo=FALSE}
-x=Y.pca$var$cos2[order(Y.pca$var$cos2[,1],decreasing = TRUE),]
-x<-as.data.frame(x)
-p<-ggplot(data=x, aes(x=rownames(x), y=Dim.1)) +
-  geom_bar(stat="identity", fill="steelblue")+ 
-  scale_x_discrete(limits=rownames(x))+
-  ylab("")+xlab('')+
-  ggtitle("% var letta da PC 1")
-
-print(p)
-
-```
-
-------------------------------------------------------------------------
-
-La percentuale della varianza totale letta
-
-###  {data-height="500"}
-
-```{r echo=FALSE}
 g<-ggplot()+ 
   geom_text(data=Y.var,aes(x=Dim.1,y=Dim.2,label=rownames(Y.var)))+ 
   geom_point(cbind.data.frame(x=0,y=0),mapping = aes(x=x,y=y),shape=3,colour="red")+
@@ -277,11 +258,71 @@ print(g)
 
 Le variabili proiette sul piano PC1/PC2
 
+###  {data-height="500"}
+
+```{r echo=FALSE}
+x=Y.pca$var$cos2[order(Y.pca$var$cos2[,1],decreasing = TRUE),]
+x<-as.data.frame(x)
+p<-ggplot(data=x, aes(x=rownames(x), y=Dim.1)) +
+  geom_bar(stat="identity", fill="steelblue")+ 
+  scale_x_discrete(limits=rownames(x))+
+  ylab("")+xlab('')+
+  ggtitle("% var letta da PC 1")
+
+print(p)
+
+```
+
+------------------------------------------------------------------------
+
+La percentuale della varianza totale letta da PC1
+
 ###  {data-height="150"}
 
-La prima componente "legge" la gravità della situazione in generale.
+La prima componente "legge" la gravità della situazione in generale (in particolare sul sistema sanitario).
 
 L'andamento nel tempo della prima componente (o meglio dellla media mobile a 7 giorni - per "smorzare" le oscillazioni giornaliere ) è in *Andamento giornaliero*.\
 La linea blu è Italia e la verde Lombardia. I pallini sono colorati per mese a partire da marzo 2020.
 
 Gli stessi colori sono usati per i box con i valori giornalieri delle variabili.
+
+###  {data-height="500"}
+
+```{r echo=FALSE}
+x=Y.pca$var$cos2[order(Y.pca$var$cos2[,2],decreasing = TRUE),]
+x<-as.data.frame(x)
+p<-ggplot(data=x, aes(x=rownames(x), y=Dim.2)) +
+  geom_bar(stat="identity", fill="steelblue")+ 
+  scale_x_discrete(limits=rownames(x))+
+  ylab("")+xlab('')+
+  ggtitle("% var letta da PC 2")
+
+print(p)
+
+```
+
+------------------------------------------------------------------------
+
+La percentuale della varianza totale letta da PC2
+
+###  {data-height="150"}
+
+La seconda componente "legge" i dimessi/guariti e i morti. La guarigione è sia clinica (dimessi) che virologica (positivi divenatti negativi) il che rende la variabile un po' ingannevole
+
+L'andamento nel tempo della seconda componente (o meglio dellla media mobile a 7 giorni - per "smorzare" le oscillazioni giornaliere ) oltre ad avere un ovvio ritardo sulla prima risente molto di quanto appena detto. Rappresenta quanto è stata forte (sempre tenendo conto di quanto appena detto) l'ondata.
+
+###  {data-height="500"}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
+#library(plotly)
+#colours <- c("Italia" = "blue","Lombardia" = "Green")
+ggplot(data=S,aes(x=giorno,y=Dim.2,colour=mese,label=giorno))+ 
+  geom_path(colour="blue",size = 0.5)+
+  geom_point(size = 0.6)+ 
+  #geom_line(mapping = aes(x=S_mm$giorno,y=S_mm$Dim.1),col='red')+
+  #geom_text()+
+  geom_path(mapping=aes(x=S_L$giorno,y=S_L$Dim.2,label=S_L$giorno),colour="green4",size = 0.5)+
+  geom_point(mapping=aes(x=S_L$giorno,y=S_L$Dim.2,colour=S_L$mese,label=S_L$giorno),size = 0.6)+ 
+  ylab('MM (7gg) PC 2')+theme(legend.position="none")
+
+```
