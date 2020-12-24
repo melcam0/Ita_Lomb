@@ -23,7 +23,7 @@ Giorno<-c(1:nrow(X))
 X<-cbind.data.frame(Giorno,X$ricoverati_con_sintomi,X$terapia_intensiva,
                     X$isolamento_domiciliare,X$dimessi_guariti,X$deceduti,X$tamponi,X$nuovi_positivi)
 Y<-X
-for(i in 2:nrow(X))Y[i,2:7]<-X[i,2:7]-X[i-1,2:7]
+for(i in 2:nrow(X))Y[i,5:7]<-X[i,5:7]-X[i-1,5:7]
 Y[,7]<-X$`X$nuovi_positivi`/Y[,7]
 Y<-Y[,1:7]
 colnames(Y)<-c('giorno','ricoverati','t_intensiva','i_domiciliare','guariti','morti','t_positività')
@@ -41,7 +41,7 @@ Giorno<-c(1:nrow(X))
 X<-cbind.data.frame(Giorno,X$ricoverati_con_sintomi,X$terapia_intensiva,
                     X$isolamento_domiciliare,X$dimessi_guariti,X$deceduti,X$tamponi,X$nuovi_positivi)
 Z<-X
-for(i in 2:nrow(X))Z[i,2:7]<-X[i,2:7]-X[i-1,2:7]
+for(i in 2:nrow(X))Z[i,5:7]<-X[i,5:7]-X[i-1,5:7]
 Z[,7]<-X$`X$nuovi_positivi`/Z[,7]
 Z<-Z[,1:7]
 colnames(Z)<-c('giorno','ricoverati','t_intensiva','i_domiciliare','guariti','morti','t_positività')
@@ -221,7 +221,7 @@ DT::datatable(data = Y[m:p,],rownames = FALSE,options = list(order = list(list(1
 
 ###  {data-height="350"}
 
-Consideriamo le 6 variabile dell'andamento giornaliero italiano: ricoverati con sintomi, terapia intensiva, isolamento domiciliare, guariti morti e tasso di positività (positivi/tamponi).
+Consideriamo le 6 variabile dell'andamento giornaliero italiano (quantità): ricoverati con sintomi, terapia intensiva, isolamento domiciliare, guariti morti e tasso di positività (positivi/tamponi).
 
 Dati Protezione civile
 
@@ -307,9 +307,9 @@ La percentuale della varianza totale letta da PC2
 
 ###  {data-height="150"}
 
-La seconda componente "legge" i dimessi/guariti e i morti. La guarigione è sia clinica (dimessi) che virologica (positivi divenatti negativi) il che rende la variabile un po' ingannevole
+La seconda componente "legge" il tasso di positività vs dimessi/guariti e isolamento domiciliare. La guarigione è sia clinica (dimessi) che virologica (positivi diventati negativi) il che rende la variabile un po' ingannevole
 
-L'andamento nel tempo della seconda componente (o meglio dellla media mobile a 7 giorni - per "smorzare" le oscillazioni giornaliere ) oltre ad avere un ovvio ritardo sulla prima risente molto di quanto appena detto. Rappresenta quanto è stata forte (sempre tenendo conto di quanto appena detto) l'ondata.
+L'andamento nel tempo della seconda componente (o meglio dellla media mobile a 7 giorni - per "smorzare" le oscillazioni giornaliere ) "legge" soprattutto il tasso di positività.
 
 ###  {data-height="500"}
 ```{r echo=FALSE, message=FALSE, warning=FALSE}

@@ -1,0 +1,328 @@
+---
+title: "Ita Lomb"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  flexdashboard::flex_dashboard:
+    #theme: journal
+    vertical_layout: scroll
+    source_code: embed
+    #social: [ "menu" ]
+    navbar:
+      - { icon: "fa-envelope-o", href: "mailto:camillomelzi@gmail.com", align: right }
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+
+library(readr)
+library(ggplot2)
+covid <- read_csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv")
+#X<-covid[covid$denominazione_regione=='Campania',]
+X<-covid
+Giorno<-c(1:nrow(X))
+X<-cbind.data.frame(Giorno,X$ricoverati_con_sintomi,X$terapia_intensiva,
+                    X$isolamento_domiciliare,X$dimessi_guariti,X$deceduti,X$tamponi,X$nuovi_positivi)
+Y<-X
+for(i in 2:nrow(X))Y[i,2:7]<-X[i,2:7]-X[i-1,2:7]
+Y[,7]<-X$`X$nuovi_positivi`/Y[,7]
+Y<-Y[,1:7]
+colnames(Y)<-c('giorno','ricoverati','t_intensiva','i_domiciliare','guariti','morti','t_positività')
+
+n<-nrow(Y)
+
+Y<-cbind.data.frame(mese=months(unique(covid$data)),Y)
+Y$mese<-factor(Y$mese,levels=c('febbraio','marzo','aprile','maggio','giugno','luglio','agosto',
+                               'settembre','ottobre','novembre','dicembre'))
+
+
+covid <- read_csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv")
+X<-covid[covid$denominazione_regione=='Lombardia',]
+Giorno<-c(1:nrow(X))
+X<-cbind.data.frame(Giorno,X$ricoverati_con_sintomi,X$terapia_intensiva,
+                    X$isolamento_domiciliare,X$dimessi_guariti,X$deceduti,X$tamponi,X$nuovi_positivi)
+Z<-X
+for(i in 2:nrow(X))Z[i,2:7]<-X[i,2:7]-X[i-1,2:7]
+Z[,7]<-X$`X$nuovi_positivi`/Z[,7]
+Z<-Z[,1:7]
+colnames(Z)<-c('giorno','ricoverati','t_intensiva','i_domiciliare','guariti','morti','t_positività')
+
+n<-nrow(Z) 
+
+Z<-cbind.data.frame(mese=months(unique(covid$data)),Z)
+Z$mese<-factor(Z$mese,levels=c('febbraio','marzo','aprile','maggio','giugno','luglio','agosto',
+                               'settembre','ottobre','novembre','dicembre'))
+
+Y<-rbind.data.frame(Y,Z)
+
+
+library(FactoMineR)
+m<-n+1;p<-2*n
+Y.pca<-PCA(X = Y,ncp = 3,quali.sup = c(1,2),ind.sup=m:p,graph = FALSE,scale.unit = TRUE)
+Y.score<-cbind.data.frame(Y[1:n,1:2],Y.pca$ind$coord)
+Y.var<-cbind.data.frame(Y.pca$var$coord)
+Y_L.score<-cbind.data.frame(Y[m:p,1:2],Y.pca$ind.sup$coord)
+
+
+n<-nrow(Y.score)
+S<-cbind.data.frame(Y.score[7:n,1:2],(Y.score[1:(n-6),3:4]+Y.score[2:(n-5),3:4]+Y.score[3:(n-4),3:4]+Y.score[4:(n-3),3:4]+Y.score[5:(n-2),3:4]+Y.score[6:(n-1),3:4]+Y.score[7:n,3:4])/7)
+
+S_L<-cbind.data.frame(Y_L.score[7:n,1:2],(Y_L.score[1:(n-6),3:4]+Y_L.score[2:(n-5),3:4]+Y_L.score[3:(n-4),3:4]+Y_L.score[4:(n-3),3:4]+Y_L.score[5:(n-2),3:4]+Y_L.score[6:(n-1),3:4]+Y_L.score[7:n,3:4])/7)
+
+n<-nrow(Y)
+T<-Y[c(n/2,n),3:8]
+rownames(T)<-c('Ita','Lomb')
+```
+
+# Andamento giornaliero {data-orientation="rows"}
+
+## Row {data-height="700"}
+
+### 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
+#library(plotly)
+#colours <- c("Italia" = "blue","Lombardia" = "Green")
+ggplot(data=S,aes(x=giorno,y=Dim.1,colour=mese,label=giorno))+ 
+  geom_path(colour="blue",size = 0.5)+
+  geom_point(size = 0.6)+ 
+  #geom_line(mapping = aes(x=S_mm$giorno,y=S_mm$Dim.1),col='red')+
+  #geom_text()+
+  geom_path(mapping=aes(x=S_L$giorno,y=S_L$Dim.1,label=S_L$giorno),colour="green4",size = 0.5)+
+  geom_point(mapping=aes(x=S_L$giorno,y=S_L$Dim.1,colour=S_L$mese,label=S_L$giorno),size = 0.6)+ 
+  ylab('MM (7gg) PC 1')+theme(legend.position="none")
+
+```
+
+## Row {data-height="150"}
+
+### Ita\_ricoverati
+
+```{r}
+valueBox(value = paste(format(T[1,1], big.mark = "."), "", sep = " "), 
+         caption = "Ricoverati", 
+         color ="blue")
+```
+
+### Ita\_t\_intensiva
+
+```{r}
+library(flexdashboard)
+valueBox(value = paste(format(T[1,2], big.mark = "."), "", sep = " "), 
+         caption = "Terapia intesiva", 
+        color ="blue")
+```
+
+### Ita\_i\_domiciliare
+
+```{r}
+library(flexdashboard)
+valueBox(value = paste(format(T[1,3], big.mark = "."), "", sep = " "), 
+         caption = "Isolamento domiciliare", 
+         color ="blue")
+```
+
+### Ita\_guariti
+
+```{r}
+library(flexdashboard)
+valueBox(value =paste(format(T[1,4], big.mark = "."), "", sep = " "), 
+         caption = "Guariti", 
+         color ="blue")
+```
+
+### Ita\_morti
+
+```{r}
+library(flexdashboard)
+valueBox(value = paste(format(T[1,5], big.mark = "."), "", sep = " "),  
+         caption = "Morti", 
+         color ="blue")
+```
+
+### Ita\_t\_positività
+
+```{r}
+library(flexdashboard)
+valueBox(value = paste(format(round(T[1,6]*100,2), big.mark = "."), " %", sep = " "),  
+         caption = "Tasso positività", 
+         color ="blue")
+```
+
+## Row {data-height="150"}
+
+### Lomb\_ricoverati
+
+```{r}
+valueBox(value = paste(format(T[2,1], big.mark = "."), "", sep = " "), 
+         caption = "Ricoverati", 
+         color ="green")
+```
+
+### Lomb\_t\_intensiva
+
+```{r}
+library(flexdashboard)
+valueBox(value = paste(format(T[2,2], big.mark = "."), "", sep = " "), 
+         caption = "Terapia intesiva", 
+        color ="green")
+```
+
+### Lomb\_i\_domiciliare
+
+```{r}
+library(flexdashboard)
+valueBox(value = paste(format(T[2,3], big.mark = "."), "", sep = " "), 
+         caption = "Isolamento domiciliare", 
+         color ="green")
+```
+
+### Lomb\_guariti
+
+```{r}
+library(flexdashboard)
+valueBox(value =paste(format(T[2,4], big.mark = "."), "", sep = " "), 
+         caption = "Guariti", 
+         color ="green")
+```
+
+### Lomb\_morti
+
+```{r}
+library(flexdashboard)
+valueBox(value = paste(format(T[2,5], big.mark = "."), "", sep = " "),  
+         caption = "Morti", 
+         color ="green")
+```
+
+### Lomb\_t\_positività
+
+```{r}
+library(flexdashboard)
+valueBox(value = paste(format(round(T[2,6]*100,2), big.mark = "."), " %", sep = " "),  
+         caption = "Tasso positività", 
+         color ="green")
+```
+
+# Dati Italia
+
+```{r}
+Y[,8]<-round(Y[,8]*100,2)
+DT::datatable(data = Y[1:(m-1),],rownames = FALSE, options = list(order = list(list(1, 'desc'))))
+```
+
+# Dati Lombardia
+
+```{r}
+DT::datatable(data = Y[m:p,],rownames = FALSE,options = list(order = list(list(1, 'desc'))))
+```
+
+# Info
+
+###  {data-height="350"}
+
+Consideriamo le 6 variabile dell'andamento giornaliero italiano: ricoverati con sintomi, terapia intensiva, isolamento domiciliare, guariti morti e tasso di positività (positivi/tamponi).
+
+Dati Protezione civile
+
+Analisi delle componenti principali (su tutto il dato nazionale).
+
+La percentuale della varianza totale letta dalle prime due componenti principali:
+
+```{r}
+library(FactoMineR)
+n<-nrow(Z)
+m<-n+1;p<-2*n
+Y.pca<-PCA(X = Y,ncp = 3,quali.sup = c(1,2),ind.sup=m:p,graph = FALSE,scale.unit = TRUE)
+Y.score<-cbind.data.frame(Y[1:n,1:2],Y.pca$ind$coord)
+Y.var<-cbind.data.frame(Y.pca$var$coord)
+Y_L.score<-cbind.data.frame(Y[m:p,1:2],Y.pca$ind.sup$coord)
+round(Y.pca$eig[1:2,2],2)
+```
+
+###  {data-height="500"}
+
+```{r echo=FALSE}
+g<-ggplot()+ 
+  geom_text(data=Y.var,aes(x=Dim.1,y=Dim.2,label=rownames(Y.var)))+ 
+  geom_point(cbind.data.frame(x=0,y=0),mapping = aes(x=x,y=y),shape=3,colour="red")+
+  xlim(-1,1)+ 
+  ylim(-1,1)+
+  xlab('PC 1')+ 
+  ylab('PC 2')
+
+print(g)
+```
+
+------------------------------------------------------------------------
+
+Le variabili proiette sul piano PC1/PC2
+
+###  {data-height="500"}
+
+```{r echo=FALSE}
+x=Y.pca$var$cos2[order(Y.pca$var$cos2[,1],decreasing = TRUE),]
+x<-as.data.frame(x)
+p<-ggplot(data=x, aes(x=rownames(x), y=Dim.1)) +
+  geom_bar(stat="identity", fill="steelblue")+ 
+  scale_x_discrete(limits=rownames(x))+
+  ylab("")+xlab('')+
+  ggtitle("% var letta da PC 1")
+
+print(p)
+
+```
+
+------------------------------------------------------------------------
+
+La percentuale della varianza totale letta da PC1
+
+###  {data-height="150"}
+
+La prima componente "legge" la gravità della situazione in generale (in particolare sul sistema sanitario).
+
+L'andamento nel tempo della prima componente (o meglio dellla media mobile a 7 giorni - per "smorzare" le oscillazioni giornaliere ) è in *Andamento giornaliero*.\
+La linea blu è Italia e la verde Lombardia. I pallini sono colorati per mese a partire da marzo 2020.
+
+Gli stessi colori sono usati per i box con i valori giornalieri delle variabili.
+
+###  {data-height="500"}
+
+```{r echo=FALSE}
+x=Y.pca$var$cos2[order(Y.pca$var$cos2[,2],decreasing = TRUE),]
+x<-as.data.frame(x)
+p<-ggplot(data=x, aes(x=rownames(x), y=Dim.2)) +
+  geom_bar(stat="identity", fill="steelblue")+ 
+  scale_x_discrete(limits=rownames(x))+
+  ylab("")+xlab('')+
+  ggtitle("% var letta da PC 2")
+
+print(p)
+
+```
+
+------------------------------------------------------------------------
+
+La percentuale della varianza totale letta da PC2
+
+###  {data-height="150"}
+
+La seconda componente "legge" i dimessi/guariti e i morti. La guarigione è sia clinica (dimessi) che virologica (positivi divenatti negativi) il che rende la variabile un po' ingannevole
+
+L'andamento nel tempo della seconda componente (o meglio dellla media mobile a 7 giorni - per "smorzare" le oscillazioni giornaliere ) oltre ad avere un ovvio ritardo sulla prima risente molto di quanto appena detto. Rappresenta quanto è stata forte (sempre tenendo conto di quanto appena detto) l'ondata.
+
+###  {data-height="500"}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
+#library(plotly)
+#colours <- c("Italia" = "blue","Lombardia" = "Green")
+ggplot(data=S,aes(x=giorno,y=Dim.2,colour=mese,label=giorno))+ 
+  geom_path(colour="blue",size = 0.5)+
+  geom_point(size = 0.6)+ 
+  #geom_line(mapping = aes(x=S_mm$giorno,y=S_mm$Dim.1),col='red')+
+  #geom_text()+
+  geom_path(mapping=aes(x=S_L$giorno,y=S_L$Dim.2,label=S_L$giorno),colour="green4",size = 0.5)+
+  geom_point(mapping=aes(x=S_L$giorno,y=S_L$Dim.2,colour=S_L$mese,label=S_L$giorno),size = 0.6)+ 
+  ylab('MM (7gg) PC 2')+theme(legend.position="none")
+
+```
