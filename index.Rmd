@@ -32,7 +32,7 @@ n<-nrow(Y)
 
 Y<-cbind.data.frame(mese=months(unique(covid$data)),Y)
 Y$mese<-factor(Y$mese,levels=c('febbraio','marzo','aprile','maggio','giugno','luglio','agosto',
-                               'settembre','ottobre','novembre','dicembre'))
+                               'settembre','ottobre','novembre','dicembre','gennaio'))
 
 
 covid <- read_csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv")
@@ -50,7 +50,7 @@ n<-nrow(Z)
 
 Z<-cbind.data.frame(mese=months(unique(covid$data)),Z)
 Z$mese<-factor(Z$mese,levels=c('febbraio','marzo','aprile','maggio','giugno','luglio','agosto',
-                               'settembre','ottobre','novembre','dicembre'))
+                               'settembre','ottobre','novembre','dicembre','gennaio'))
 
 Y<-rbind.data.frame(Y,Z)
 
