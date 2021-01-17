@@ -57,7 +57,7 @@ Y<-rbind.data.frame(Y,Z)
 
 library(FactoMineR)
 m<-n+1;p<-2*n
-Y.pca<-PCA(X = Y,ncp = 3,quali.sup = c(1,2),ind.sup=m:p,graph = FALSE,scale.unit = TRUE)
+Y.pca<-PCA(X = Y,ncp = 3,quali.sup = c(1,2,8),ind.sup=m:p,graph = FALSE,scale.unit = TRUE)
 Y.score<-cbind.data.frame(Y[1:n,1:2],Y.pca$ind$coord)
 Y.var<-cbind.data.frame(Y.pca$var$coord)
 Y_L.score<-cbind.data.frame(Y[m:p,1:2],Y.pca$ind.sup$coord)
@@ -227,7 +227,7 @@ DT::datatable(data = Y[m:p,],rownames = FALSE, extensions = 'Buttons',
 
 ###  {data-height="350"}
 
-Consideriamo le 6 variabile dell'andamento giornaliero italiano (quantità): ricoverati con sintomi, terapia intensiva, isolamento domiciliare, guariti morti e tasso di positività (positivi/tamponi).
+Consideriamo le 5 variabile dell'andamento giornaliero italiano (quantità): ricoverati con sintomi, terapia intensiva, isolamento domiciliare, guariti e morti- Ho tolto  il tasso di positività (positivi/tamponi) visto che da metà gennaio vengono considerati anche i tamponi rapidi provocando un valore non più confrontabile a prima.
 
 Dati Protezione civile
 
@@ -239,7 +239,7 @@ La percentuale della varianza totale letta dalle prime due componenti principali
 library(FactoMineR)
 n<-nrow(Z)
 m<-n+1;p<-2*n
-Y.pca<-PCA(X = Y,ncp = 3,quali.sup = c(1,2),ind.sup=m:p,graph = FALSE,scale.unit = TRUE)
+Y.pca<-PCA(X = Y,ncp = 3,quali.sup = c(1,2,8),ind.sup=m:p,graph = FALSE,scale.unit = TRUE)
 Y.score<-cbind.data.frame(Y[1:n,1:2],Y.pca$ind$coord)
 Y.var<-cbind.data.frame(Y.pca$var$coord)
 Y_L.score<-cbind.data.frame(Y[m:p,1:2],Y.pca$ind.sup$coord)
@@ -292,43 +292,43 @@ La linea blu è Italia e la verde Lombardia. I pallini sono colorati per mese a 
 
 Gli stessi colori sono usati per i box con i valori giornalieri delle variabili.
 
-###  {data-height="500"}
+<!-- ###  {data-height="500"} -->
 
-```{r echo=FALSE}
-x=Y.pca$var$cos2[order(Y.pca$var$cos2[,2],decreasing = TRUE),]
-x<-as.data.frame(x)
-p<-ggplot(data=x, aes(x=rownames(x), y=Dim.2)) +
-  geom_bar(stat="identity", fill="steelblue")+ 
-  scale_x_discrete(limits=rownames(x))+
-  ylab("")+xlab('')+
-  ggtitle("% var letta da PC 2")
+<!-- ```{r echo=FALSE} -->
+<!-- x=Y.pca$var$cos2[order(Y.pca$var$cos2[,2],decreasing = TRUE),] -->
+<!-- x<-as.data.frame(x) -->
+<!-- p<-ggplot(data=x, aes(x=rownames(x), y=Dim.2)) + -->
+<!--   geom_bar(stat="identity", fill="steelblue")+ -->
+<!--   scale_x_discrete(limits=rownames(x))+ -->
+<!--   ylab("")+xlab('')+ -->
+<!--   ggtitle("% var letta da PC 2") -->
 
-print(p)
+<!-- print(p) -->
 
-```
+<!-- ``` -->
 
-------------------------------------------------------------------------
+<!-- ------------------------------------------------------------------------ -->
 
-La percentuale della varianza totale letta da PC2
+<!-- La percentuale della varianza totale letta da PC2 -->
 
-###  {data-height="150"}
+<!-- ###  {data-height="150"} -->
 
-La seconda componente "legge" il tasso di positività vs dimessi/guariti e isolamento domiciliare. La guarigione è sia clinica (dimessi) che virologica (positivi diventati negativi) il che rende la variabile un po' ingannevole
+<!-- La seconda componente "legge" i guariti e isolamento domiciliare vs i ricoverati, terapie intensive e morti. La guarigione è sia clinica (dimessi) che virologica (positivi diventati negativi) il che rende la variabile un po' ingannevole -->
 
-L'andamento nel tempo della seconda componente (o meglio dellla media mobile a 7 giorni - per "smorzare" le oscillazioni giornaliere ) "legge" soprattutto il tasso di positività.
+<!-- L'andamento nel tempo della seconda componente (o meglio dellla media mobile a 7 giorni - per "smorzare" le oscillazioni giornaliere ) "legge" soprattutto i guariti . -->
 
-###  {data-height="500"}
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-library(ggplot2)
-#library(plotly)
-#colours <- c("Italia" = "blue","Lombardia" = "Green")
-ggplot(data=S,aes(x=giorno,y=Dim.2,colour=mese,label=giorno))+ 
-  geom_path(colour="blue",size = 0.5)+
-  geom_point(size = 0.6)+ 
-  #geom_line(mapping = aes(x=S_mm$giorno,y=S_mm$Dim.1),col='red')+
-  #geom_text()+
-  geom_path(mapping=aes(x=S_L$giorno,y=S_L$Dim.2,label=S_L$giorno),colour="green4",size = 0.5)+
-  geom_point(mapping=aes(x=S_L$giorno,y=S_L$Dim.2,colour=S_L$mese,label=S_L$giorno),size = 0.6)+ 
-  ylab('MM (7gg) PC 2')+theme(legend.position="none")
+<!-- ###  {data-height="500"} -->
+<!-- ```{r echo=FALSE, message=FALSE, warning=FALSE} -->
+<!-- library(ggplot2) -->
+<!-- #library(plotly) -->
+<!-- #colours <- c("Italia" = "blue","Lombardia" = "Green") -->
+<!-- ggplot(data=S,aes(x=giorno,y=Dim.2,colour=mese,label=giorno))+ -->
+<!--   geom_path(colour="blue",size = 0.5)+ -->
+<!--   geom_point(size = 0.6)+ -->
+<!--   #geom_line(mapping = aes(x=S_mm$giorno,y=S_mm$Dim.1),col='red')+ -->
+<!--   #geom_text()+ -->
+<!--   geom_path(mapping=aes(x=S_L$giorno,y=S_L$Dim.2,label=S_L$giorno),colour="green4",size = 0.5)+ -->
+<!--   geom_point(mapping=aes(x=S_L$giorno,y=S_L$Dim.2,colour=S_L$mese,label=S_L$giorno),size = 0.6)+ -->
+<!--   ylab('MM (7gg) PC 2')+theme(legend.position="none") -->
 
-```
+<!-- ``` -->
