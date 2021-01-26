@@ -18,6 +18,7 @@ library(readr)
 library(ggplot2)
 covid <- read_csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv")
 #X<-covid[covid$denominazione_regione=='Campania',]
+# covid <- covid[1:338,]
 X<-covid
 Giorno<-c(1:nrow(X))
 X<-cbind.data.frame(Giorno,X$ricoverati_con_sintomi,X$terapia_intensiva,
