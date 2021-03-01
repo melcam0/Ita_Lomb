@@ -38,6 +38,9 @@ Y$mese<-factor(Y$mese,levels=c('febbraio','marzo','aprile','maggio','giugno','lu
 
 covid <- read_csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv")
 X<-covid[covid$denominazione_regione=='Lombardia',]
+
+# X <- X[1:(nrow(X)-1),]
+
 Giorno<-c(1:nrow(X))
 X<-cbind.data.frame(Giorno,X$ricoverati_con_sintomi,X$terapia_intensiva,
                     X$isolamento_domiciliare,X$dimessi_guariti,X$deceduti,X$tamponi,X$nuovi_positivi)
