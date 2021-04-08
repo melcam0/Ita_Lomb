@@ -253,13 +253,17 @@ round(Y.pca$eig[1:2,2],2)
 ###  {data-height="500"}
 
 ```{r echo=FALSE}
+arrows = data.frame(x1 = rep(0,5), y1 = rep(0,5),
+                    x2 = Y.var [,1], y2 = Y.var [,2])
 g<-ggplot()+ 
-  geom_text(data=Y.var,aes(x=Dim.1,y=Dim.2,label=rownames(Y.var)))+ 
+  geom_text(data=Y.var,aes(x=Dim.1,y=Dim.2,label=rownames(Y.var),fontface=2))+ 
   geom_point(cbind.data.frame(x=0,y=0),mapping = aes(x=x,y=y),shape=3,colour="red")+
   xlim(-1,1)+ 
   ylim(-1,1)+
   xlab('PC 1')+ 
-  ylab('PC 2')
+  ylab('PC 2')+
+  geom_segment(data = arrows, aes(x = x1, y = y1, xend = x2, yend = y2),
+             x=0, y=0,colour = "blue",arrow=arrow(angle=25, length=unit(0.25, "cm")))
 
 print(g)
 ```
