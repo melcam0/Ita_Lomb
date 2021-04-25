@@ -212,7 +212,7 @@ valueBox(value = paste(format(round(T[2,6]*100,2), big.mark = "."), " %", sep = 
 
 ```{r}
 Y[,8]<-round(Y[,8]*100,2)
-DT::datatable(data = Y[1:(m-1),],rownames = FALSE, extensions = 'Buttons',
+DT::datatable(data = Y[1:(m-1),],rownames = FALSE, extensions = 'Buttons',fillContainer = FALSE,
               options = list(order = list(list(1, 'desc')),dom = 'Blfrtip',
                              buttons = list(list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download')) 
                                                                   ))
@@ -221,7 +221,7 @@ DT::datatable(data = Y[1:(m-1),],rownames = FALSE, extensions = 'Buttons',
 # Dati Lombardia
 
 ```{r}
-DT::datatable(data = Y[m:p,],rownames = FALSE, extensions = 'Buttons',
+DT::datatable(data = Y[m:p,],rownames = FALSE, extensions = 'Buttons',fillContainer = FALSE,
               options = list(order = list(list(1, 'desc')),dom = 'Blfrtip',
                              buttons = list(list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download')) 
                                                                   ))
