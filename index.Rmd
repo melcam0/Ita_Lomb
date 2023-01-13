@@ -11,6 +11,18 @@ output:
       - { icon: "fa-envelope-o", href: "mailto:camillomelzi@gmail.com", align: right }
 ---
 
+<style type="text/css">
+.value-box .value {
+    color: white;
+}
+.value-box .caption {
+    color: white;
+}
+</style>
+
+
+
+
 ```{r setup, include=FALSE}
 library(flexdashboard)
 
@@ -179,8 +191,8 @@ valueBox(value = paste(format(T[2,1], big.mark = "."), "", sep = " "),
 ```{r}
 library(flexdashboard)
 valueBox(value = paste(format(T[2,2], big.mark = "."), "", sep = " "), 
-         caption = "Terapia intesiva", 
-        color ="green")
+         caption = "Terapia intesiva",
+         color ="green")
 ```
 
 ### Lomb_i\_domiciliare
@@ -210,11 +222,11 @@ valueBox(value = paste(format(T[2,5], big.mark = "."), "", sep = " "),
          color ="green")
 ```
 
-### Lomb_t\_positività
+### Lomb_t\_positività 
 
 ```{r}
 library(flexdashboard)
-valueBox(value = paste(format(round(T[2,6]*100,2), big.mark = "."), " %", sep = " "),  
+valueBox(value = paste(format(round(T[2,6]*100,2), big.mark = "."), " %", sep = " "),
          caption = "Tasso positività", 
          color ="green")
 ```
